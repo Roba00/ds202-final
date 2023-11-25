@@ -1,0 +1,51 @@
+---
+title: 'Final Proposal'
+author: "Roba Abbajabal, Conor O'Shea, Aadhi Subbiah, Daniel Nass"
+date: "11/11/2023"
+output: html_document
+---
+
+# Research Title: An Analysis on Transportation Safety
+##### Team Members: Roba Abbajabal, Conor O'Shea, Aadhi Subbiah, Daniel Nass
+
+#### Description of Data: 
+This data set contains information from 2010-2021 regarding fatal vehicular accidents that have occured on highways within the United States by state/territory.
+The data can be acessed at the following link: https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/transportation-safety
+The varibles included in this dataset are as follows: 
+- State: the state that the information comes from
+- Fatality Type: A factor of 14 different types of fatalities (such as highway fatalities, SUV fatalities, etc.)
+- Year: The year, from 2010 to 2021, of the number of a specific type of fatality in a state occured.
+
+#### Investigation: 
+What states, if any, have stark contrasts in vehicular fatalities? Do these states have any laws or regulations that would cause this?
+Have counts of certain types of vehicular fatalities increased or decreased over time?
+Do any types of vehicular fatalities correlate with another?
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# csv being used
+library(tidyverse)
+library(dplyr)
+
+hw <- read.csv("hwFatal.csv")
+head(hw)
+
+# information about data set
+summary(hw)
+```
+
+```{r}
+# Cleaning data
+## Fixing empty column name for Fatality Type
+hw <-  read.csv("hwFatal.csv", col.names = c("State","FatalityType","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"))
+
+## Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
+states <- hw %>% filter(State != "United States")
+head(states)
+
+# information about data set
+summary(states)
+```
