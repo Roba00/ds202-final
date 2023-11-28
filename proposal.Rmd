@@ -133,7 +133,80 @@ temp_states %>%
   mutate(total_fatalities = sum(count), .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities))
-  
+
+```
+
+```{r}
+# Conor
+
+# Pickup Truck Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Pickup Truck Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Pickup Truck Fatalities by Year")
+
+# Pickup Truck Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Pickup Truck Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Pickup Truck Fatalities by State")
+
+# Van Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Van Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Van Fatalities by Year")
+
+# Van Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Van Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Van Fatalities by State")
+
+# Other Light Truck Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Other Light Truck Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Other Light Truck Fatalities by Year")
+
+# Other Light Truck Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Other Light Truck Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Other Light Truck Fatalities by State")
+
+# Motorcycle Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Motorcycle Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Motorcycle Fatalities by Year")
+
+# Motorcycle Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Motorcycle Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Motorcycle Fatalities by State")
+
 
 ```
 
