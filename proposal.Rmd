@@ -51,6 +51,12 @@ head(states)
 summary(states)
 ```
 
+#### Plan of Data Exploration
+
+Break down each fatality type and plot the data by state, observe similarities and differences between the states for each fatality type.
+
+### Data Exploration
+
 ```{r}
 # Aadhi
 
@@ -155,7 +161,7 @@ temp_states %>%
   ggtitle("Bus Fatalities by State")
 
 
-# Large Truck Fatalities
+# Large Truck Fatalities by year per state
 states_year %>% 
   filter(FatalityType == "Large Truck Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
@@ -170,7 +176,7 @@ temp_states %>%
   ggtitle("Large Truck Fatalities by State")
 
 
-# Pedalcyclist Fatalities
+# Pedalcyclist Fatalities by year per state
 states_year %>% 
   filter(FatalityType == "Pedalcyclist Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
