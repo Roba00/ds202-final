@@ -4,20 +4,20 @@
 
 #### Tasks TODO:
 
-- Highway Fatalities (Roba)
-- Passenger Car Fatalities (Roba)
-- SUV Fatalities (Roba)
-- Pickup Truck Fatalities (Conor)
-- Van Fatalities (Conor)
-- Other Light Truck Fatalities (Conor)
-- Motorcycle Fatalities (Conor)
+- ~~- Highway Fatalities (Roba)~~
+- ~~-Passenger Car Fatalities (Roba)~~
+- ~~- SUV Fatalities (Roba)~~
+- ~~- Pickup Truck Fatalities (Conor)~~
+- ~~- Van Fatalities (Conor)~~
+- ~~- Other Light Truck Fatalities (Conor)~~
+- ~~- Motorcycle Fatalities (Conor)~~
 - ~~- Bus Fatalities (Daniel)~~
 - ~~- Large Truck Fatalities (Daniel)~~
 - ~~- Pedalcyclist Fatalities (Daniel)~~
 - ~~- Pedestrian Fatalities (Aadhi)~~
 - ~~- Other Nonoccupant Fatalities (Aadhi)~~
 - ~~- Other Vehicle Fatalities (Aadhi)~~
-- Unknown Person Type Fatalities (Roba)
+- ~~- Unknown Person Type Fatalities (Roba)~~
 
 #### Amendments to TODO Tasks:
 
