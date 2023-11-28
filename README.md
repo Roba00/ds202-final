@@ -11,12 +11,12 @@
 - Van Fatalities (Conor)
 - Other Light Truck Fatalities (Conor)
 - Motorcycle Fatalities (Conor)
-~~- Bus Fatalities (Daniel)~~
-~~- Large Truck Fatalities (Daniel)~~
-~~- Pedalcyclist Fatalities (Daniel)~~
-~~- Pedestrian Fatalities (Aadhi)~~
-~~- Other Nonoccupant Fatalities (Aadhi)~~
-~~- Other Vehicle Fatalities (Aadhi)~~
+- ~~- Bus Fatalities (Daniel)~~
+- ~~- Large Truck Fatalities (Daniel)~~
+- ~~- Pedalcyclist Fatalities (Daniel)~~
+- ~~- Pedestrian Fatalities (Aadhi)~~
+- ~~- Other Nonoccupant Fatalities (Aadhi)~~
+- ~~- Other Vehicle Fatalities (Aadhi)~~
 - Unknown Person Type Fatalities (Roba)
 
 #### Amendments to TODO Tasks:
