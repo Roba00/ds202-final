@@ -23,13 +23,12 @@ Do any types of vehicular fatalities correlate with another?
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
 ```
 
 ```{r}
 # csv being used
-library(tidyverse)
-library(dplyr)
-
 hw <- read.csv("hwFatal.csv")
 head(hw)
 
@@ -39,6 +38,7 @@ summary(hw)
 
 ```{r}
 # Cleaning data
+
 ## Fixing empty column name for Fatality Type
 hw <-  read.csv("hwFatal.csv", col.names = c("State","FatalityType","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"))
 
@@ -137,5 +137,52 @@ temp_states %>%
 
 ```
 
+``` {r, Warnings=FALSE}
+# Daniel
 
+# Bus Fatalities by year per state
+states_year %>% 
+  filter(FatalityType == "Bus Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Bus Fatalities by Year")
+
+temp_states %>%
+  filter(FatalityType == "Bus Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = count)) + 
+  ggtitle("Bus Fatalities by State")
+
+
+# Large Truck Fatalities
+states_year %>% 
+  filter(FatalityType == "Large Truck Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Large Truck Fatalities by Year")
+
+temp_states %>%
+  filter(FatalityType == "Large Truck Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = count)) + 
+  ggtitle("Large Truck Fatalities by State")
+
+
+# Pedalcyclist Fatalities
+states_year %>% 
+  filter(FatalityType == "Pedalcyclist Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Pedalcyclist Fatalities by Year")
+
+temp_states %>%
+  filter(FatalityType == "Pedalcyclist Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = count)) + 
+  ggtitle("Pedalcyclist Fatalities by State")
+
+```
 
