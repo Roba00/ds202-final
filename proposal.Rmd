@@ -39,13 +39,30 @@ summary(hw)
 ```{r}
 # Cleaning data
 
-## Fixing empty column name for Fatality Type
-hw <-  read.csv("hwFatal.csv", col.names = c("State","FatalityType","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"))
+## Fixing empty column name for Fatality Type, and making year column names start with a character
+hw <-  read.csv("hwFatal.csv", col.names = c("State","FatalityType","Y2010","Y2011","Y2012","Y2013","Y2014","Y2015","Y2016","Y2017","Y2018","Y2019","Y2020","Y2021"))
 
 ## Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
 states <- hw %>% filter(State != "United States")
 states$State <- tolower(states$State) # making joining with the map easier later on
 head(states)
+
+## Parse the fatality by year as a number, and not a character.
+states <- states %>%
+    mutate (
+        Y2010 = parse_number(Y2010),
+        Y2011 = parse_number(Y2011),
+        Y2012 = parse_number(Y2012),
+        Y2013 = parse_number(Y2013),
+        Y2014 = parse_number(Y2014),
+        Y2015 = parse_number(Y2015),
+        Y2016 = parse_number(Y2016),
+        Y2017 = parse_number(Y2017),
+        Y2018 = parse_number(Y2018),
+        Y2019 = parse_number(Y2019),
+        Y2020 = parse_number(Y2020),
+        Y2021 = parse_number(Y2021),
+    )
 
 # information about data set
 summary(states)
@@ -66,7 +83,7 @@ state_map <- map_data("state")
 colnames(state_map)[5] <- "State"   # making join easier
 
 states_year <- states %>%        # Organizing by year and the count a numeric to plot
-  pivot_longer(cols = X2010:X2021, 
+  pivot_longer(cols = Y2010:Y2021, 
                names_to = "year", 
                values_to = "count") %>% 
   mutate(`count` = as.numeric(`count`))
@@ -265,3 +282,74 @@ temp_states %>%
 
 ```
 
+
+```{r}
+# Roba
+
+## Construct map of fatalality by state
+
+states$region <- tolower(states$State)
+state_map2 <- map_data("state")
+state_map2 <- states %>% left_join(state_map2, by="region")
+head(state_map2)
+
+state_map2 %>% filter(FatalityType == "Highway Fatalities") %>% 
+    ggplot(aes(x = long, y = lat, 
+    fill=Y2010+Y2011+Y2012+Y2013+Y2014+Y2015+Y2016+Y2017+Y2018+Y2019+Y2020+Y2021)) + 
+    geom_polygon(aes(group=group)) +
+    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
+    ggtitle("Highway Fatalities by State")
+    
+state_map2 %>% filter(FatalityType == "Passenger Car Fatalities") %>% 
+    ggplot(aes(x = long, y = lat, 
+    fill=Y2010+Y2011+Y2012+Y2013+Y2014+Y2015+Y2016+Y2017+Y2018+Y2019+Y2020+Y2021)) + 
+    geom_polygon(aes(group=group)) +
+    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
+    ggtitle("Passenger Car Fatalities by State")
+
+state_map2 %>% filter(FatalityType == "SUV Fatalities") %>% 
+    ggplot(aes(x = long, y = lat, 
+    fill=Y2010+Y2011+Y2012+Y2013+Y2014+Y2015+Y2016+Y2017+Y2018+Y2019+Y2020+Y2021)) + 
+    geom_polygon(aes(group=group)) +
+    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
+    ggtitle("SUV Fatalities by State")
+
+state_map2 %>% filter(FatalityType == "Unknown Person Type Fatalities") %>% 
+    ggplot(aes(x = long, y = lat, 
+    fill=Y2010+Y2011+Y2012+Y2013+Y2014+Y2015+Y2016+Y2017+Y2018+Y2019+Y2020+Y2021)) + 
+    geom_polygon(aes(group=group)) +
+    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
+    ggtitle("Unknown Person Type Fatalities by State")
+
+## Construct map of fatalality by year
+
+state_map_year <- states %>% 
+  pivot_longer(cols = Y2010:Y2021, 
+               names_to = "year", 
+               values_to = "count") %>% 
+  mutate(`count` = as.numeric(`count`))
+
+state_map_year %>% 
+  filter(FatalityType == "Highway Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Highway Fatalities by Year")
+
+state_map_year %>% 
+  filter(FatalityType == "Passenger Car Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Passenger Car Fatalities by Year")
+
+state_map_year %>% 
+  filter(FatalityType == "SUV Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("SUV Fatalities by Year")
+
+state_map_year %>% 
+  filter(FatalityType == "Unknown Person Type Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Unknown Person Type Fatalities by Year")
+```
