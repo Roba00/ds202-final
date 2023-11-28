@@ -23,13 +23,12 @@ Do any types of vehicular fatalities correlate with another?
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
 ```
 
 ```{r}
 # csv being used
-library(tidyverse)
-library(dplyr)
-
 hw <- read.csv("hwFatal.csv")
 head(hw)
 
@@ -39,13 +38,230 @@ summary(hw)
 
 ```{r}
 # Cleaning data
+
 ## Fixing empty column name for Fatality Type
 hw <-  read.csv("hwFatal.csv", col.names = c("State","FatalityType","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"))
 
 ## Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
 states <- hw %>% filter(State != "United States")
+states$State <- tolower(states$State) # making joining with the map easier later on
 head(states)
 
 # information about data set
 summary(states)
 ```
+
+#### Plan of Data Exploration
+
+Break down each fatality type and plot the data by state, observe similarities and differences between the states for each fatality type.
+
+### Data Exploration
+
+```{r}
+# Aadhi
+
+# Initializing stuff
+state_map <- map_data("state")
+
+colnames(state_map)[5] <- "State"   # making join easier
+
+states_year <- states %>%        # Organizing by year and the count a numeric to plot
+  pivot_longer(cols = X2010:X2021, 
+               names_to = "year", 
+               values_to = "count") %>% 
+  mutate(`count` = as.numeric(`count`))
+
+temp_states <- left_join(state_map, states_year, by = "State") # making df to plot
+
+
+
+
+# Pedestrian Fatalities by Year
+states_year %>% 
+  filter(FatalityType == "Pedestrian Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col() + 
+  ggtitle("Pedestrian Fatalities by Year")
+
+# Pedestrian Fatalities by State
+temp_states %>% 
+  filter(FatalityType == "Pedestrian Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Pedestrian Fatalities by State")
+
+
+
+
+
+
+# Other Nonoccupant Fatalities by Year
+states_year %>% 
+  filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col() + 
+  ggtitle("Other Nonoccupant Fatalities by Year")
+
+# Other Nonoccupant Fatalities by State
+temp_states %>% 
+  filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Other Nonoccupant Fatalities by State")
+
+
+
+
+
+
+# Other Vehicle Fatalities by Year
+states_year %>% 
+  filter(FatalityType == "Other Vehicle Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col() + 
+  ggtitle("Other Vehicle Fatalities by Year")
+
+# Other Vehicle Fatalities by State
+temp_states %>% 
+  filter(FatalityType == "Other Vehicle Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Other Vehicle Fatalities by State")
+```
+```{r}
+temp_states <- left_join(state_map, states_year, by = "State")
+
+temp_states %>% 
+  filter(FatalityType == "Pedestrian Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities))
+
+```
+
+```{r}
+# Conor
+
+# Pickup Truck Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Pickup Truck Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Pickup Truck Fatalities by Year")
+
+# Pickup Truck Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Pickup Truck Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Pickup Truck Fatalities by State")
+
+# Van Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Van Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Van Fatalities by Year")
+
+# Van Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Van Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Van Fatalities by State")
+
+# Other Light Truck Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Other Light Truck Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Other Light Truck Fatalities by Year")
+
+# Other Light Truck Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Other Light Truck Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Other Light Truck Fatalities by State")
+
+# Motorcycle Fatalities by Year (Conor)
+
+states_year %>% 
+  filter(FatalityType == "Motorcycle Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Motorcycle Fatalities by Year")
+
+# Motorcycle Fatalities by State (Conor)
+
+temp_states %>% 
+  filter(FatalityType == "Motorcycle Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities)) + 
+  ggtitle("Motorcycle Fatalities by State")
+
+
+```
+
+``` {r, Warnings=FALSE}
+# Daniel
+
+# Bus Fatalities by year per state
+states_year %>% 
+  filter(FatalityType == "Bus Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Bus Fatalities by Year")
+
+temp_states %>%
+  filter(FatalityType == "Bus Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = count)) + 
+  ggtitle("Bus Fatalities by State")
+
+
+# Large Truck Fatalities by year per state
+states_year %>% 
+  filter(FatalityType == "Large Truck Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Large Truck Fatalities by Year")
+
+temp_states %>%
+  filter(FatalityType == "Large Truck Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = count)) + 
+  ggtitle("Large Truck Fatalities by State")
+
+
+# Pedalcyclist Fatalities by year per state
+states_year %>% 
+  filter(FatalityType == "Pedalcyclist Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Pedalcyclist Fatalities by Year")
+
+temp_states %>%
+  filter(FatalityType == "Pedalcyclist Fatalities") %>% 
+  mutate(total_fatalities = sum(count), .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = count)) + 
+  ggtitle("Pedalcyclist Fatalities by State")
+
+```
+
