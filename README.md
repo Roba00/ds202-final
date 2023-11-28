@@ -11,13 +11,18 @@
 - Van Fatalities (Conor)
 - Other Light Truck Fatalities (Conor)
 - Motorcycle Fatalities (Conor)
-- Bus Fatalities (Daniel)
-- Large Truck Fatalities (Daniel)
-- Pedalcyclist Fatalities (Daniel)
-- Pedestrian Fatalities (Aadhi)
-- Other Nonoccupant Fatalities (Aadhi)
-- Other Vehicle Fatalities (Aadhi)
+~~- Bus Fatalities (Daniel)~~
+~~- Large Truck Fatalities (Daniel)~~
+~~- Pedalcyclist Fatalities (Daniel)~~
+~~- Pedestrian Fatalities (Aadhi)~~
+~~- Other Nonoccupant Fatalities (Aadhi)~~
+~~- Other Vehicle Fatalities (Aadhi)~~
 - Unknown Person Type Fatalities (Roba)
+
+#### Amendments to TODO Tasks:
+
+
+
 
 Also, here's the slide where the professor shows how to make plots by state in R:
 - https://ds202-at-isu.github.io/materials/04_date-time-space/02_maps.html#10
