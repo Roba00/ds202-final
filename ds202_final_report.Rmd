@@ -1,0 +1,42 @@
+---
+title: "DS202 Group 1 Final Report"
+author: "Daniel Nass, Roba Abbajabal, Conor O'Shea, Aadhi Subbiah"
+date: "2023-12-01"
+output: html_document
+---
+
+# Research Title: An Analysis on Transportation Safety in the US
+### Team Members: Roba Abbajabal, Conor O'Shea, Aadhi Subbiah, Daniel Nass
+
+#### Description of Data: 
+This data set contains information from 2010-2021 regarding fatal vehicular accidents that have occured on highways within the United States by state/territory.
+The data can be acessed at the following link: https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/transportation-safety
+The varibles included in this dataset are as follows: 
+- State: the state that the information comes from
+- Fatality Type: A factor of 14 different types of fatalities (such as highway fatalities, SUV fatalities, etc.)
+- Year: The year, from 2010 to 2021, of the number of a specific type of fatality in a state occured.
+
+#### Investigation: 
+What states, if any, have stark contrasts in vehicular fatalities? Do these states have any laws or regulations that would cause this?
+Have counts of certain types of vehicular fatalities increased or decreased over time?
+Do any types of vehicular fatalities correlate with another?
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+```
+
+## Group 1 Final Report
+
+
+
+
+
+
+
+
+
+
+
+
