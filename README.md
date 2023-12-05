@@ -21,8 +21,13 @@
 
 #### Amendments to TODO Tasks:
 
+- Highlight certain information given by plots (ie. what states have the highest stats, etc)
+- Connect plots and data gained to initial questions.
+- Organize README.rmd final report file to be in the layout displayed by the rubric
+- Add relevant data and plots to presentation slides
+- Make conclusions on data
 
-
+####
 
 Also, here's the slide where the professor shows how to make plots by state in R:
 - https://ds202-at-isu.github.io/materials/04_date-time-space/02_maps.html#10
