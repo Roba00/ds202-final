@@ -1,5 +1,5 @@
 ---
-title: 'Final Proposal'
+title: 'Final Report'
 author: "Roba Abbajabal, Conor O'Shea, Aadhi Subbiah, Daniel Nass"
 date: "11/11/2023"
 output: html_document
@@ -102,28 +102,44 @@ with our data for Pedestrian Fatalities by State Population Density.
 
 ### Data Setup
 
-```{r setup, include=FALSE, echo=FALSE, warnings=FALSE}
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
 ```
 
-```{r, echo=FALSE, warnings=FALSE}
+#### Highway Fatalities dataset being used
+
+```{r, echo=FALSE, warning=FALSE}
 # Datasets being used
 hw <- read.csv("hw_fatal.csv")
 head(hw)
+```
 
+#### Summary of the Highway Fatalities dataset
+
+``` {r, echo=FALSE, warning=FALSE}
 # information about data set
 summary(hw)
+```
 
+#### State Populations dataset form 2010-2021 being used
+
+``` {r, echo=FALSE, warning=FALSE}
 statePop <- read.csv("state_populations_2010-2021.csv", col.names = c("State", "Y2010","Y2011","Y2012","Y2013","Y2014","Y2015","Y2016","Y2017","Y2018","Y2019","Y2020","Y2021"))
-head(hw)
+head(statePop)
+```
 
+#### Summary of the State Populations dataset
+
+``` {r, echo=FALSE, warning=FALSE}
 # information about dataset
 summary(statePop)
 ```
 
-```{r, echo=FALSE, warnings=FALSE}
+### Cleaning up data
+
+```{r, echo=FALSE, warning=FALSE}
 # Cleaning data
 
 ## Fixing empty column name for Fatality Type, and making year column names start with a character
@@ -132,6 +148,11 @@ hw <-  read.csv("hw_fatal.csv", col.names = c("State","FatalityType","Y2010","Y2
 ## Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
 states <- hw %>% filter(State != "United States")
 states$State <- tolower(states$State) # making joining with the map easier later on
+```
+
+#### Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
+
+``` {r, echo=FALSE, warning=FALSE}
 head(states)
 
 ## Parse the fatality by year as a number, and not a character.
@@ -151,7 +172,11 @@ states <- states %>%
         Y2021 = parse_number(Y2021),
         TotalFatalities = parse_number(TotalFatalities)
     )
+```
 
+#### Summary of newly created states dataset
+
+``` {r, echo=FALSE, warning=FALSE}
 # information about data set
 summary(states)
 ```
@@ -162,7 +187,7 @@ Break down each fatality type and plot the data by state, observe similarities a
 
 ### Data Exploration
 
-```{r, echo=FALSE, warnings=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Aadhi
 
 # Initializing stuff
@@ -189,7 +214,7 @@ temp_states_old <- left_join(state_map, states_year, by = "State") # making df t
 temp_states <- left_join(temp_states_old, states_pops, by = c("State", "year"))
 ```
 
-```{r, echo=FALSE, warnings=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Aadhi
 
 # Pedestrian Fatalities by Year
@@ -268,7 +293,7 @@ temp_states %>%
 
 
 
-```{r, echo=FALSE, warnings=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Conor
 
 # Pickup Truck Fatalities by Year (Conor)
@@ -374,7 +399,7 @@ temp_states %>%
 
 ```
 
-```{r, echo=FALSE, warnings=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Daniel
 
 # Bus Fatalities by year per state
@@ -447,7 +472,7 @@ temp_states %>%
 ```
 
 
-```{r, echo=FALSE, warnings=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Roba
 
 ## Construct map of fatalality by state
@@ -528,11 +553,12 @@ state_map_year %>%
   geom_col() + 
   ggtitle("SUV Fatalities by Year")
 
-state_map_year %>% 
-  filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
-  ggplot(aes(x = long, y = lat)) + 
-  geom_polygon(aes(group = group, fill = temp_sum)) + 
-  ggtitle("Other Nonoccupant Fatalities by State")
+state_map2 %>% filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
+    mutate(total_fatalities = TotalFatalities, .by = State) %>%    
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = total_fatalities)) +
+    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
+    ggtitle("Other Nonoccupant Fatalities by State")
 ```
 
 
