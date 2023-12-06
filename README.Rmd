@@ -61,44 +61,7 @@ The data does not account directly for population density.
 The data is raw numbers, and in order to get a better insight into what the
 data means we have to look at it by state.
 
-The first cases of COVID-19 reached the US in January 2020, and the Trump Administration
-declared a nationwide emergency on the COVID-19 pandemic in March 2021.
-(https://www.cdc.gov/museum/timeline/covid19.html).
 
-However, according to the National Highway Traffic Safety Administration,
-the number of fatal traffic crashes increased by 6.8%. This would seem strange,
-considering that less people overall were driving on the road without the need to
-commute to work.
-(https://www.nhtsa.gov/press-releases/2020-traffic-crash-data-fatalities)
-
-Megan McArdle, a columnist the Washington Post, indicated that this may be due to an
-increase in young and risky male drivers taking advantage of empty COVID-era roads.
-A study done by the AAA Foundation for Traffic Safety indicated that young males were
-the only people who indicated that they were driving more during the COVID pandemic -
-taking their risky driving with them.
-(https://www.washingtonpost.com/opinions/2022/03/10/pandemic-risky-driving-maybe-here-to-stay/).
-
-Light Truck fatalities seems to be an exception to these sudden spike of fatal accidents
-during the COVID-19 pandemic, due to young male drivers being less likely to own light trucks.
-
-In addition, according to Michael Wilbur, a PHD Student in Vanderbilt University, in a paper 
-published in the Transportation Research Record: Journal of the Transportation Research Board,
-bus fatalities is also an exception to the sudden spike of fatal accidents
-due to a decrease in operation hours for buses during the COVID-19 pandemic, as well as
-social distancing measures and precautions advised and enforced by state legislature.
-(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10107069/)
-
-Christy Bieber, J.D., indicated that the top 5 most deadliest states to drive in are
-Montana, South Carolina, New Mexico, Wyoming, and Texas based on data from the
-National Highway Traffic Safety Administration (NHTSA). This seems to align with
-our data for Pedestrian  Fatalities by State Population Density.
-(https://www.forbes.com/advisor/legal/most-dangerous-states-for-drivers/) 
-
-According to Alina Comoreanu, a Senior researcher at WalletHub, the top 5 states that 
-had the most strictest enforcement on speeding and reckless driving are (in order) 
-Delaware, Colorado, Arizona, New Mexico, and California. This seems to correlate
-with our data for Pedestrian Fatalities by State Population Density.
-(https://wallethub.com/edu/strictest-and-most-lenient-states-on-speeding/14211)
 
 ### Data Setup
 
@@ -214,6 +177,44 @@ temp_states_old <- left_join(state_map, states_year, by = "State") # making df t
 temp_states <- left_join(temp_states_old, states_pops, by = c("State", "year"))
 ```
 
+``` {r, echo=FALSE, warning=FALSE}
+
+## Construct map of fatalality by state (Roba)
+
+states$region <- tolower(states$State)
+state_map2 <- map_data("state")
+state_map2 <- states %>% left_join(state_map2, by="region")
+head(state_map2)
+```
+
+#### Highway Fatalities by Year for each State
+
+``` {r, echo=FALSE, warning=FALSE}
+# Overall highway fatalities by year and state
+temp_states %>%
+  filter(FatalityType == "Highway Fatalities") %>% 
+  mutate(total_pop = sum(population), .by = State) %>%
+  mutate(total_fatalities = TotalFatalities, .by = State) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
+  ggtitle("Highway Fatalities by State per Capita")
+
+state_map2 %>% filter(FatalityType == "Highway Fatalities") %>% 
+    mutate(total_fatalities = TotalFatalities, .by = State) %>%   
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = total_fatalities)) +
+    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
+    ggtitle("Highway Fatalities by State (2010-2021)")
+
+states_year %>% 
+  filter(FatalityType == "Highway Fatalities") %>% 
+  ggplot(aes(x = year, y = count, fill = State)) + 
+  geom_col(space=1) + 
+  ggtitle("Highway Fatalities by Year by State") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
 ```{r, echo=FALSE, warning=FALSE}
 # Aadhi
 
@@ -222,7 +223,8 @@ states_year %>%
   filter(FatalityType == "Pedestrian Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  ggtitle("Pedestrian Fatalities by Year")
+  ggtitle("Pedestrian Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Pedestrian Fatalities by State
 temp_states %>% 
@@ -248,7 +250,8 @@ states_year %>%
   filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  ggtitle("Other Nonoccupant Fatalities by Year")
+  ggtitle("Other Nonoccupant Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Other Nonoccupant Fatalities by State
 
@@ -272,7 +275,8 @@ states_year %>%
   filter(FatalityType == "Other Vehicle Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  ggtitle("Other Vehicle Fatalities by Year")
+  ggtitle("Other Vehicle Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Other Vehicle Fatalities by State
 temp_states %>% 
@@ -302,8 +306,9 @@ states_year %>%
   filter(FatalityType == "Pickup Truck Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
-  ggtitle("Pickup Truck Fatalities by Year")
-
+  ggtitle("Pickup Truck Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ 
 # Pickup Truck Fatalities by State (Conor)
 
 temp_states %>% 
@@ -327,7 +332,8 @@ states_year %>%
   filter(FatalityType == "Van Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
-  ggtitle("Van Fatalities by Year")
+  ggtitle("Van Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Van Fatalities by State (Conor)
 
@@ -352,7 +358,8 @@ states_year %>%
   filter(FatalityType == "Other Light Truck Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
-  ggtitle("Other Light Truck Fatalities by Year")
+  ggtitle("Other Light Truck Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Other Light Truck Fatalities by State (Conor)
 
@@ -377,7 +384,8 @@ states_year %>%
   filter(FatalityType == "Motorcycle Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
-  ggtitle("Motorcycle Fatalities by Year")
+  ggtitle("Motorcycle Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Motorcycle Fatalities by State (Conor)
 
@@ -407,7 +415,8 @@ states_year %>%
   filter(FatalityType == "Bus Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col(space=1) + 
-  ggtitle("Bus Fatalities by Year")
+  ggtitle("Bus Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 temp_states %>%
   filter(FatalityType == "Bus Fatalities") %>% 
@@ -430,7 +439,8 @@ states_year %>%
   filter(FatalityType == "Large Truck Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col(space=1) + 
-  ggtitle("Large Truck Fatalities by Year")
+  ggtitle("Large Truck Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 temp_states %>%
   filter(FatalityType == "Large Truck Fatalities") %>% 
@@ -452,7 +462,8 @@ states_year %>%
   filter(FatalityType == "Pedalcyclist Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col(space=1) + 
-  ggtitle("Pedalcyclist Fatalities by Year")
+  ggtitle("Pedalcyclist Fatalities by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 temp_states %>%
   filter(FatalityType == "Pedalcyclist Fatalities") %>% 
@@ -474,29 +485,7 @@ temp_states %>%
 
 ```{r, echo=FALSE, warning=FALSE}
 # Roba
-
-## Construct map of fatalality by state
-
-states$region <- tolower(states$State)
-state_map2 <- map_data("state")
-state_map2 <- states %>% left_join(state_map2, by="region")
-head(state_map2)
-
-temp_states %>%
-  filter(FatalityType == "Highway Fatalities") %>% 
-  mutate(total_pop = sum(population), .by = State) %>%
-  mutate(total_fatalities = TotalFatalities, .by = State) %>% 
-  ggplot(aes(x = long, y = lat)) + 
-  geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  ggtitle("Highway Fatalities by State per Capita")
-
-state_map2 %>% filter(FatalityType == "Highway Fatalities") %>% 
-    mutate(total_fatalities = TotalFatalities, .by = State) %>%   
-    ggplot(aes(x = long, y = lat)) + 
-    geom_polygon(aes(group=group, fill = total_fatalities)) +
-    scale_fill_continuous(name = "Death Count (2010 - 2021)") +
-    ggtitle("Highway Fatalities by State Population Density")
-    
+  
 temp_states %>%
   filter(FatalityType == "Passenger Car Fatalities") %>% 
   mutate(total_pop = sum(population), .by = State) %>%
@@ -562,5 +551,54 @@ state_map2 %>% filter(FatalityType == "Other Nonoccupant Fatalities") %>%
 ```
 
 
-#### Results:
+### Results:
+
+The first cases of COVID-19 reached the US in January 2020, and the Trump Administration
+declared a nationwide emergency on the COVID-19 pandemic in March 2021.
+(https://www.cdc.gov/museum/timeline/covid19.html).
+
+However, according to the National Highway Traffic Safety Administration,
+the number of fatal traffic crashes increased by 6.8%. This would seem strange,
+considering that less people overall were driving on the road without the need to
+commute to work.
+(https://www.nhtsa.gov/press-releases/2020-traffic-crash-data-fatalities)
+
+Megan McArdle, a columnist the Washington Post, indicated that this may be due to an
+increase in young and risky male drivers taking advantage of empty COVID-era roads.
+A study done by the AAA Foundation for Traffic Safety indicated that young males were
+the only people who indicated that they were driving more during the COVID pandemic -
+taking their risky driving with them.
+(https://www.washingtonpost.com/opinions/2022/03/10/pandemic-risky-driving-maybe-here-to-stay/).
+
+Light Truck fatalities seems to be an exception to these sudden spike of fatal accidents
+during the COVID-19 pandemic, due to young male drivers being less likely to own light trucks.
+
+In addition, according to Michael Wilbur, a PHD Student in Vanderbilt University, in a paper 
+published in the Transportation Research Record: Journal of the Transportation Research Board,
+bus fatalities is also an exception to the sudden spike of fatal accidents
+due to a decrease in operation hours for buses during the COVID-19 pandemic, as well as
+social distancing measures and precautions advised and enforced by state legislature.
+(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10107069/)
+
+Christy Bieber, J.D., indicated that the top 5 most deadliest states to drive in are
+Montana, South Carolina, New Mexico, Wyoming, and Texas based on data from the
+National Highway Traffic Safety Administration (NHTSA). This seems to align with
+our data for Pedestrian  Fatalities by State Population Density.
+(https://www.forbes.com/advisor/legal/most-dangerous-states-for-drivers/) 
+
+```{r, echo=FALSE, warning=FALSE}
+
+
+
+```
+
+According to Alina Comoreanu, a Senior researcher at WalletHub, the top 5 states that 
+had the most strictest enforcement on speeding and reckless driving are (in order) 
+Delaware, Colorado, Arizona, New Mexico, and California. This seems to correlate
+with our data for Pedestrian Fatalities by State Population Density.
+(https://wallethub.com/edu/strictest-and-most-lenient-states-on-speeding/14211)
+
+
+
+
 
