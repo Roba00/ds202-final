@@ -109,6 +109,7 @@ financials2019_old2 <- financials2019_old1 %>%        # Organizing by year and t
                names_to = "State", 
                values_to = "Amount (Per 1000)") %>% 
   mutate(`Amount (Per 1000)` = parse_number(`Amount (Per 1000)`))
+financials2019 <- financials2019_old2
 financials2019$State <- tolower(financials2019_old2$State)
 financials2019$State <- gsub(".", " ", financials2019$State, fixed=TRUE)
 head(financials2019)
@@ -133,12 +134,14 @@ highwayFats_states_pops_revenue_2019 %>%
     mutate(revenue = `Amount (Per 1000)`, .by = State) %>%   
     ggplot(aes(x = long, y = lat)) + 
     geom_polygon(aes(group=group, fill = revenue / population)) +
-    scale_fill_continuous(name = "Total State Revenue Per Capita (K)") +
-    ggtitle("Total State Revenue Per Capita (2019)")
+    scale_fill_continuous(name = "Total State Revenue ($1000/Capita)") +
+    ggtitle("State Total Revenue (2019)")
 
 highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
   geom_point() +
-  geom_smooth(method=lm, se=FALSE)
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("State Revenue's Effect on Traffic Fatalities (2019)") +
+  xlab("Total State Revenue ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
 ```
 
 ```{r}
@@ -150,19 +153,31 @@ highwayFats_states_pops_revenue_2019 <-
 
 highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
   geom_point() +
-  geom_smooth(method=lm, se=FALSE)
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("State Police Funding's Effect on Traffic Fatalities (2019)") +
+  xlab("Police Funding ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
 ```
 
 ```{r}
+
 highwayFats_states_pops_revenue_2019 <-
     fat_states_pops_fin_2019 %>% 
-    filter(RevenueType == "Liquor stores expenditure", FatalityType == "Highway Fatalities") %>% 
+    filter(RevenueType == "Total expenditure", FatalityType == "Highway Fatalities") %>% 
     select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
     distinct()
 
+highwayFats_states_pops_revenue_2019 %>%
+    mutate(revenue = `Amount (Per 1000)`, .by = State) %>%   
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = revenue / population)) +
+    scale_fill_continuous(name = "Total State Expenditure ($1000/Capita)") +
+    ggtitle("State Expenditure's (2019)")
+
 highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
   geom_point() +
-  geom_smooth(method=lm, se=FALSE)
+  geom_smooth(method=lm, se=FALSE)  +
+  ggtitle("State Expenditure's Effect on Traffic Fatalities (2019)") +
+  xlab("Total Expenditure ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
 ```
 
 ```{r}
@@ -174,5 +189,7 @@ highwayFats_states_pops_revenue_2019 <-
 
 highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
   geom_point() +
-  geom_smooth(method=lm, se=FALSE)
+  geom_smooth(method=lm, se=FALSE)  +
+  ggtitle("State Education Funding's Effect on Traffic Fatalities (2019)") +
+  xlab("Education Funding ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
 ```
