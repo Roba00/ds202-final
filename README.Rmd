@@ -68,7 +68,6 @@ data means we have to look at it by state.
 ```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(dplyr)
 ```
 
 #### Highway Fatalities dataset being used
