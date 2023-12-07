@@ -48,6 +48,18 @@ The varibles included in this dataset are as follows:
 - Name: The state that information comes from.
 - POPESTIMATE([2010-2021]): The population estimates for year ([2010-2021]).
 
+State Highway Travel: 2010-2021
+The Highway Statistics Series consists of annual reports containing analyzed statistical information on motor fuel, motor vehicle registrations, driver licenses, highway user taxation, highway mileage, travel, and highway finance. These information are presented in tables as well as selected charts. It has been published annually since 1945.
+This data can be accessed using the following link: https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/state-highway-travel
+Usage: This dataset will be used for reporting the number of miles driven each year and the number of licensed drivers per state
+The variables that are being used are:
+- State: the name of the state the information is from
+- Measures: A factor of 2 different types of data
+  - Licensed drivers
+  - Highway vehicle-miles traveled (millions)
+- Year of Year: year the information is from (2010-2021)
+- Values: value of measure factor
+
 #### Investigations: 
 - What is the leading cause of highway fatalities overall/by state?
 - What states, if any, have stark contrasts in vehicular fatalities? 
@@ -98,6 +110,21 @@ head(statePop)
 ``` {r, echo=FALSE, warning=FALSE}
 # information about dataset
 summary(statePop)
+```
+
+#### State Highway Travel dataset: 2010-2021 being used
+
+``` {r, echo=FALSE, warning=FALSE}
+
+hw_travel <- read.csv("vehicles_traveled_licensed_drivers_2010_2021.csv", col.names = c("State", "Type", "Year", "Count"))
+head(hw_travel)
+```
+
+#### Summary of the State Highway Travel dataset
+
+``` {r, echo=FALSE, warning=FALSE}
+# information about dataset
+summary(hw_travel)
 ```
 
 ### Cleaning up data
@@ -153,7 +180,7 @@ Break down each fatality type and plot the data by state, observe similarities a
 ```{r, echo=FALSE, warning=FALSE}
 # Aadhi
 
-# Initializing stuff
+# Initializing maps
 state_map <- map_data("state")
 
 colnames(state_map)[5] <- "State"   # making join easier
@@ -175,7 +202,19 @@ states_pops$State <- tolower(states_pops$State)
 
 temp_states_old <- left_join(state_map, states_year, by = "State") # making df to plot
 temp_states <- left_join(temp_states_old, states_pops, by = c("State", "year"))
+
+# Roba
+## Construct map of fatalality by year
+
+state_map_year <- states %>% 
+  pivot_longer(cols = Y2010:Y2021, 
+               names_to = "year", 
+               values_to = "count") %>% 
+  mutate(`count` = as.numeric(`count`))
+
 ```
+
+#### Construct map of fatalality by state
 
 ``` {r, echo=FALSE, warning=FALSE}
 
@@ -212,6 +251,36 @@ states_year %>%
   geom_col(space=1) + 
   ggtitle("Highway Fatalities by Year by State") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+state_map_year %>% 
+  filter(FatalityType == "Highway Fatalities") %>% 
+  ggplot(aes(x = year, y = count)) + 
+  geom_col() + 
+  ggtitle("Highway Fatality Totals by Year")
+
+```
+
+
+
+#### Comparing highway fatalities to miles traveled in each state/overall from 2010-2021
+
+``` {r, echo=FALSE, warning=FALSE}
+
+# Show the number of combined highway vehicle miles traveled each year (2010-2021)
+hw_travel %>% 
+  filter(Type == "Highway vehicle-miles traveled (millions)") %>% 
+  ggplot(aes(x = Year, y = Count, fill = State)) + 
+  geom_col() + 
+  ggtitle("Highway vehicle-miles traveled (millions) by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+
+# Show the number of total licensed drivers in the US by year
+hw_travel %>% 
+  filter(Type == "Licensed drivers") %>% 
+  ggplot(aes(x = Year, y = Count, fill = State)) + 
+  geom_col() + 
+  ggtitle("Licensed drivers by Year") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
 
 ```
 
@@ -515,20 +584,6 @@ state_map2 %>% filter(FatalityType == "SUV Fatalities") %>%
     geom_polygon(aes(group=group, fill = total_fatalities)) +
     scale_fill_continuous(name = "Death Count (2010 - 2021)") +
     ggtitle("SUV Fatalities by State")
-
-## Construct map of fatalality by year
-
-state_map_year <- states %>% 
-  pivot_longer(cols = Y2010:Y2021, 
-               names_to = "year", 
-               values_to = "count") %>% 
-  mutate(`count` = as.numeric(`count`))
-
-state_map_year %>% 
-  filter(FatalityType == "Highway Fatalities") %>% 
-  ggplot(aes(x = year, y = count)) + 
-  geom_col() + 
-  ggtitle("Highway Fatalities by Year")
 
 state_map_year %>% 
   filter(FatalityType == "Passenger Car Fatalities") %>% 
