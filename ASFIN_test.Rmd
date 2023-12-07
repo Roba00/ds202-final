@@ -1,0 +1,195 @@
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r, echo=FALSE, warning=FALSE}
+# Datasets being used
+hw <- read.csv("hw_fatal.csv")
+head(hw)
+```
+
+#### Summary of the Highway Fatalities dataset
+
+``` {r, echo=FALSE, warning=FALSE}
+# information about data set
+summary(hw)
+```
+
+#### State Populations dataset form 2010-2021 being used
+
+``` {r, echo=FALSE, warning=FALSE}
+statePop <- read.csv("state_populations_2010-2021.csv", col.names = c("State", "Y2010","Y2011","Y2012","Y2013","Y2014","Y2015","Y2016","Y2017","Y2018","Y2019","Y2020","Y2021"))
+head(statePop)
+```
+
+#### Summary of the State Populations dataset
+
+``` {r, echo=FALSE, warning=FALSE}
+# information about dataset
+summary(statePop)
+```
+
+### Cleaning up data
+
+```{r, echo=FALSE, warning=FALSE}
+# Cleaning data
+
+## Fixing empty column name for Fatality Type, and making year column names start with a character
+hw <-  read.csv("hw_fatal.csv", col.names = c("State","FatalityType","Y2010","Y2011","Y2012","Y2013","Y2014","Y2015","Y2016","Y2017","Y2018","Y2019","Y2020","Y2021","TotalFatalities"))
+
+## Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
+states <- hw %>% filter(State != "United States")
+states$State <- tolower(states$State) # making joining with the map easier later on
+```
+
+#### Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
+
+``` {r, echo=FALSE, warning=FALSE}
+head(states)
+
+## Parse the fatality by year as a number, and not a character.
+states <- states %>%
+    mutate (
+        Y2010 = parse_number(Y2010),
+        Y2011 = parse_number(Y2011),
+        Y2012 = parse_number(Y2012),
+        Y2013 = parse_number(Y2013),
+        Y2014 = parse_number(Y2014),
+        Y2015 = parse_number(Y2015),
+        Y2016 = parse_number(Y2016),
+        Y2017 = parse_number(Y2017),
+        Y2018 = parse_number(Y2018),
+        Y2019 = parse_number(Y2019),
+        Y2020 = parse_number(Y2020),
+        Y2021 = parse_number(Y2021),
+        TotalFatalities = parse_number(TotalFatalities)
+    )
+```
+
+#### Summary of newly created states dataset
+
+``` {r, echo=FALSE, warning=FALSE}
+# information about data set
+summary(states)
+```
+
+```{r, echo=FALSE, warning=FALSE}
+# Initializing stuff
+state_map <- map_data("state")
+
+colnames(state_map)[5] <- "State"   # making join easier
+
+states_year <- states %>%        # Organizing by year and the count a numeric to plot
+  pivot_longer(cols = Y2010:Y2021, 
+               names_to = "year", 
+               values_to = "count") %>% 
+  mutate(`count` = as.numeric(`count`))
+
+states_pops <- statePop %>%        # Organizing by year and the count a numeric to plot
+  pivot_longer(cols = Y2010:Y2021, 
+               names_to = "year", 
+               values_to = "population") %>% 
+  mutate(`population` = as.numeric(`population`))
+
+
+states_pops$State <- tolower(states_pops$State)
+
+temp_states_old <- left_join(state_map, states_year, by = "State") # making df to plot
+temp_states <- left_join(temp_states_old, states_pops, by = c("State", "year"))
+```
+
+```{r}
+
+financials2019_old1 <- read.csv("ASFIN_FY2019.csv")
+head(financials2019_old1)
+
+financials2019_old2 <- financials2019_old1 %>%        # Organizing by year and the count a numeric to plot
+  pivot_longer(cols = !RevenueType, 
+               names_to = "State", 
+               values_to = "Amount (Per 1000)") %>% 
+  mutate(`Amount (Per 1000)` = parse_number(`Amount (Per 1000)`))
+financials2019 <- financials2019_old2
+financials2019$State <- tolower(financials2019_old2$State)
+financials2019$State <- gsub(".", " ", financials2019$State, fixed=TRUE)
+head(financials2019)
+
+fat_states_pops_2019 <- temp_states %>% filter(year == "Y2019")
+head(fat_states_pops_2019)
+```
+
+```{r}
+fat_states_pops_fin_2019 <- left_join(fat_states_pops_2019, financials2019, by = "State")
+head(fat_states_pops_fin_2019)
+```
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Total revenue", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>%
+    mutate(revenue = `Amount (Per 1000)`, .by = State) %>%   
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = revenue / population)) +
+    scale_fill_continuous(name = "Total State Revenue ($1000/Capita)") +
+    ggtitle("State Total Revenue (2019)")
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("State Revenue's Effect on Traffic Fatalities (2019)") +
+  xlab("Total State Revenue ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Police protection", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("State Police Funding's Effect on Traffic Fatalities (2019)") +
+  xlab("Police Funding ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
+
+```{r}
+
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Total expenditure", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>%
+    mutate(revenue = `Amount (Per 1000)`, .by = State) %>%   
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = revenue / population)) +
+    scale_fill_continuous(name = "Total State Expenditure ($1000/Capita)") +
+    ggtitle("State Expenditure's (2019)")
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)  +
+  ggtitle("State Expenditure's Effect on Traffic Fatalities (2019)") +
+  xlab("Total Expenditure ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Education", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)  +
+  ggtitle("State Education Funding's Effect on Traffic Fatalities (2019)") +
+  xlab("Education Funding ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
