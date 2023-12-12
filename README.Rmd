@@ -3,77 +3,141 @@ title: 'Final Report'
 author: "Roba Abbajabal, Conor O'Shea, Aadhi Subbiah, Daniel Nass"
 date: "11/11/2023"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ### Introduction
-- For our research, we wished to analyze transportation safety in the US by state from 2010-2021.
-- This involved observing fatalities by state and year, and then connecting that information with outside sources.
-- This research particularly interests us, because we wish to find reasons of what may cause safer roads.
 
+-   For our research, we wished to analyze transportation safety in the
+    US by state from 2010-2021.
+-   This involved observing fatalities by state and year, and then
+    connecting that information with outside sources.
+-   This research particularly interests us, because we wish to find
+    reasons of what may cause safer roads.
 
 ### Research Title: An Analysis on Transportation Safety in the US
+
 ### Team Members: Roba Abbajabal, Conor O'Shea, Aadhi Subbiah, Daniel Nass
 
-#### Description of Data: 
-This data set contains information from 2010-2021 regarding fatal vehicular accidents that have occured on highways within the United States by state/territory.
-The data can be acessed at the following link: https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/transportation-safety
-The varibles included in this dataset are as follows: 
-- State: the state that the information comes from
-- Fatality Type: A factor of 14 different types of fatalities (such as highway fatalities, SUV fatalities, etc.)
-  - Highway Fatalities
-  - Passenger Car Fatalities
-  - SUV Fatalities
-  - Pickup Truck Fatalities
-  - Van Fatalities
-  - Other Light Truck Fatalities
-  - Motorcycle Fatalities
-  - Bus Fatalities
-  - Large Truck Fatalities
-  - Pedalcyclist Fatalities
-  - Pedestrian Fatalities
-  - Other Nonoccupant Fatalities
-  - Other Vehicle Fatalities
-  - Unknown Person Type Fatalities
-- Year: The year, from 2010 to 2021, of the number of a specific type of fatality in a state occured.
-- TotalFatalities: the sum of all fatalities for each FatalityType and by year for overall and by each state.
+#### Description of Data:
+
+This data set contains information from 2010-2021 regarding fatal
+vehicular accidents that have occurred on highways within the United
+States by state/territory. The data can be accessed at the following
+link:
+<https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/transportation-safety>
+The variables included in this dataset are as follows:
+
+-   State: the state that the information comes from
+
+-   Fatality Type: A factor of 14 different types of fatalities (such as
+    highway fatalities, SUV fatalities, etc.)
+
+    -    Highway Fatalities
+
+    -   Passenger Car Fatalities
+
+    -   SUV Fatalities
+
+    -   Pickup Truck Fatalities
+
+    -   Van Fatalities
+
+    -   Other Light Truck Fatalities
+
+    -    Motorcycle Fatalities
+
+    -   Bus Fatalities - Large Truck Fatalities
+
+    -   Pedalcyclist Fatalities
+
+    -   Pedestrian Fatalities
+
+    -   Other Nonoccupant Fatalities
+
+    -   Other Vehicle Fatalities
+
+    -   Unknown Person Type Fatalities
+
+-   Year: The year, from 2010 to 2021, of the number of a specific type
+    of fatality in a state occured.
+
+-   TotalFatalities: the sum of all fatalities for each FatalityType and
+    by year for overall and by each state.
 
 #### Supplementary Datasets Used:
-State Population Totals: 2010-2020
-Our dataset from Bureau of Transportation Safety contains information 
-from 2010-2021 regarding fatal vehicular accidents that have occurred 
-on highways within the United States by state/territory.
-The data can be accessed at the following link: https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html
-Usage: This dataset will be used for reporting the number of fatalities by state by capita.
-The varibles included in this dataset are as follows: 
-- Name: The state that information comes from.
-- POPESTIMATE([2010-2021]): The population estimates for year ([2010-2021]).
 
-State Highway Travel: 2010-2021
-The Highway Statistics Series consists of annual reports containing analyzed statistical information on motor fuel, motor vehicle registrations, driver licenses, highway user taxation, highway mileage, travel, and highway finance. These information are presented in tables as well as selected charts. It has been published annually since 1945.
-This data can be accessed using the following link: https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/state-highway-travel
-Usage: This dataset will be used for reporting the number of miles driven each year and the number of licensed drivers per state
-The variables that are being used are:
-- State: the name of the state the information is from
-- Measures: A factor of 2 different types of data
-  - Licensed drivers
-  - Highway vehicle-miles traveled (millions)
-- Year of Year: year the information is from (2010-2021)
-- Values: value of measure factor
+**State Population Totals** (2010-2020)
+[state_populations_2010-2021.csv]: This dataset from Bureau of
+Transportation Safety contains information from 2010-2021 regarding
+fatal vehicular accidents that have occurred on highways within the
+United States by state/territory. The data can be accessed at the
+following link:
+<https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html>
+This dataset will be used for reporting the number of fatalities by
+state per capita. The variables included in this dataset are as follows:
 
-#### Investigations: 
-- What is the leading cause of highway fatalities overall/by state?
-- What states, if any, have stark contrasts in vehicular fatalities? 
-- Do these states have any laws or regulations that would cause this?
-- Do any types of vehicular fatalities correlate with another?
-- Have counts of certain types of vehicular fatalities increased or decreased over time?
-- How did the COVID-19 pandemic during 2021 affect traffic fatalities?
+-   Name: The state that information comes from.
+
+-   POPESTIMATE([2010-2021]): The population estimates for year
+    ([2010-2021]).
+
+**State Highway Travel** (2010-2021)
+[vehicles_traveleld_licensed_drivers_2010_2021.csv]: The Highway
+Statistics Series consists of annual reports containing analyzed
+statistical information on motor fuel, motor vehicle registrations,
+driver licenses, highway user taxation, highway mileage, travel, and
+highway finance. These information are presented in tables as well as
+selected charts. It has been published annually since 1945. This data
+can be accessed using the following link:
+<https://www.bts.gov/browse-statistical-products-and-data/state-transportation-statistics/state-highway-travel>
+This dataset will be used for reporting the number of miles driven each
+year and the number of licensed drivers per state The variables that are
+being used are as follows:
+
+-   State: the name of the state the information is from
+
+-   Measures: A factor of 2 different types of data
+
+-   Licensed drivers - Highway vehicle-miles traveled (millions)
+
+-   Year of Year: year the information is from (2010-2021)
+
+-   Values: value of measure factor
+
+**State Financials (2019)** [ASFIN_FY2019.csv]: This dataset from
+Census.gov contains information in year 2019 regarding state revenue and
+expenditure from different sources. We used this data to show what
+correlation traffic fatalities may have with state financial data in the
+year 2019. The year 2019 was chosen because it was the year before
+COVID-19 arrived to the United States, which we later saw had it's own
+impact on traffic fatalities. The variables in the dataset (after using
+pivot_longer) are as follows:
+
+-   State: The name of the state the information is collected form.
+
+-   Amount (Per 1000): The amount per \$1000 dollars of state revenue or
+    expenditure per category.
+
+-   RevenueType: The type of revenue or expenditure being reported.
+
+#### Investigations:
+
+-   What is the leading cause of highway fatalities overall/by state?
+-   What states, if any, have stark contrasts in vehicular fatalities?
+-   Do these states have any laws or regulations that would cause this?
+-   Do any types of vehicular fatalities correlate with another?
+-   Have counts of certain types of vehicular fatalities increased or
+    decreased over time?
+-   How did the COVID-19 pandemic during 2021 affect traffic fatalities?
 
 #### Main:
-The data does not account directly for population density. 
-The data is raw numbers, and in order to get a better insight into what the
-data means we have to look at it by state.
 
-
+The data does not account directly for population density. The data is
+raw numbers, and in order to get a better insight into what the data
+means we have to look at it by state.
 
 ### Data Setup
 
@@ -93,28 +157,28 @@ head(hw)
 
 #### Summary of the Highway Fatalities dataset
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # information about data set
 summary(hw)
 ```
 
 #### State Populations dataset form 2010-2021 being used
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 statePop <- read.csv("state_populations_2010-2021.csv", col.names = c("State", "Y2010","Y2011","Y2012","Y2013","Y2014","Y2015","Y2016","Y2017","Y2018","Y2019","Y2020","Y2021"))
 head(statePop)
 ```
 
 #### Summary of the State Populations dataset
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # information about dataset
 summary(statePop)
 ```
 
 #### State Highway Travel dataset: 2010-2021 being used
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 
 hw_travel <- read.csv("vehicles_traveled_licensed_drivers_2010_2021.csv", col.names = c("State", "Type", "Year", "Count"))
 head(hw_travel)
@@ -122,7 +186,7 @@ head(hw_travel)
 
 #### Summary of the State Highway Travel dataset
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # information about dataset
 summary(hw_travel)
 ```
@@ -140,9 +204,9 @@ states <- hw %>% filter(State != "United States")
 states$State <- tolower(states$State) # making joining with the map easier later on
 ```
 
-#### Creating a seocnd dataset where there the whole country collectively is not included (just states and territories individually)
+#### Creating a second dataset where there the whole country collectively is not included (just states and territories individually)
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 head(states)
 
 ## Parse the fatality by year as a number, and not a character.
@@ -166,14 +230,15 @@ states <- states %>%
 
 #### Summary of newly created states dataset
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # information about data set
 summary(states)
 ```
 
 #### Plan of Data Exploration
 
-Break down each fatality type and plot the data by state, observe similarities and differences between the states for each fatality type.
+Break down each fatality type and plot the data by state, observe
+similarities and differences between the states for each fatality type.
 
 ### Data Exploration
 
@@ -216,7 +281,7 @@ state_map_year <- states %>%
 
 #### Construct map of fatalality by state
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 
 ## Construct map of fatalality by state (Roba)
 
@@ -228,7 +293,7 @@ head(state_map2)
 
 #### Highway Fatalities by Year for each State
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # Overall highway fatalities by year and state
 temp_states %>%
   filter(FatalityType == "Highway Fatalities") %>% 
@@ -260,11 +325,9 @@ state_map_year %>%
 
 ```
 
-
-
 #### Comparing highway fatalities to miles traveled in each state/overall from 2010-2021
 
-``` {r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 
 # Show the number of combined highway vehicle miles traveled each year (2010-2021)
 hw_travel %>% 
@@ -363,8 +426,6 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Other Vehicle Fatalities by State")
 ```
-
-
 
 ```{r, echo=FALSE, warning=FALSE}
 # Conor
@@ -551,7 +612,6 @@ temp_states %>%
 
 ```
 
-
 ```{r, echo=FALSE, warning=FALSE}
 # Roba
   
@@ -605,41 +665,152 @@ state_map2 %>% filter(FatalityType == "Other Nonoccupant Fatalities") %>%
     ggtitle("Other Nonoccupant Fatalities by State")
 ```
 
+### Investigating Correlations to State Revenue & Expenditure
+
+#### Reading and Formatting the Financial Data
+
+```{r}
+financials2019_old1 <- read.csv("ASFIN_FY2019.csv")
+head(financials2019_old1)
+
+financials2019_old2 <- financials2019_old1 %>%        # Organizing by year and the count a numeric to plot
+  pivot_longer(cols = !RevenueType, 
+               names_to = "State", 
+               values_to = "Amount (Per 1000)") %>% 
+  mutate(`Amount (Per 1000)` = parse_number(`Amount (Per 1000)`))
+financials2019 <- financials2019_old2
+financials2019$State <- tolower(financials2019_old2$State)
+financials2019$State <- gsub(".", " ", financials2019$State, fixed=TRUE)
+head(financials2019)
+```
+
+#### Joining Financial Data with Traffic Fatality Data
+
+```{r}
+fat_states_pops_2019 <- temp_states %>% filter(year == "Y2019")
+head(fat_states_pops_2019)
+
+fat_states_pops_fin_2019 <- left_join(fat_states_pops_2019, financials2019, by = "State")
+head(fat_states_pops_fin_2019)
+```
+
+#### Investigating Correlations of Traffic Fatalities with Total State Revenue
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Total revenue", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>%
+    mutate(revenue = `Amount (Per 1000)`, .by = State) %>%   
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = revenue / population)) +
+    scale_fill_continuous(name = "Total State Revenue ($1000/Capita)") +
+    ggtitle("State Total Revenue (2019)")
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("State Revenue's Effect on Traffic Fatalities (2019)") +
+  xlab("Total State Revenue ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
+
+#### Investigating Correlations of Traffic Fatalities with Police Expenditure
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Police protection", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("State Police Funding's Effect on Traffic Fatalities (2019)") +
+  xlab("Police Funding ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
+
+#### Investigating Correlations of Traffic Fatalities with Total State Expenditure
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Total expenditure", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>%
+    mutate(revenue = `Amount (Per 1000)`, .by = State) %>%   
+    ggplot(aes(x = long, y = lat)) + 
+    geom_polygon(aes(group=group, fill = revenue / population)) +
+    scale_fill_continuous(name = "Total State Expenditure ($1000/Capita)") +
+    ggtitle("State Expenditure's (2019)")
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)  +
+  ggtitle("State Expenditure's Effect on Traffic Fatalities (2019)") +
+  xlab("Total Expenditure ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
+
+#### Investigating Correlations of Traffic Fatalities with Education Expenditure
+
+```{r}
+highwayFats_states_pops_revenue_2019 <-
+    fat_states_pops_fin_2019 %>% 
+    filter(RevenueType == "Education", FatalityType == "Highway Fatalities") %>% 
+    select(group, long, lat, State, FatalityType, TotalFatalities, `Amount (Per 1000)`, population) %>%
+    distinct()
+
+highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/population, y=`TotalFatalities`/population)) + 
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE)  +
+  ggtitle("State Education Funding's Effect on Traffic Fatalities (2019)") +
+  xlab("Education Funding ($1000/Per Capita)") + ylab("Total Traffic Fatalities Per Capita")
+```
 
 ### Results:
 
-The first cases of COVID-19 reached the US in January 2020, and the Trump Administration
-declared a nationwide emergency on the COVID-19 pandemic in March 2021.
-(https://www.cdc.gov/museum/timeline/covid19.html).
+The first cases of COVID-19 reached the US in January 2020, and the
+Trump Administration declared a nationwide emergency on the COVID-19
+pandemic in March 2021.
+(<https://www.cdc.gov/museum/timeline/covid19.html>).
 
-However, according to the National Highway Traffic Safety Administration,
-the number of fatal traffic crashes increased by 6.8%. This would seem strange,
-considering that less people overall were driving on the road without the need to
-commute to work.
-(https://www.nhtsa.gov/press-releases/2020-traffic-crash-data-fatalities)
+However, according to the National Highway Traffic Safety
+Administration, the number of fatal traffic crashes increased by 6.8%.
+This would seem strange, considering that less people overall were
+driving on the road without the need to commute to work.
+(<https://www.nhtsa.gov/press-releases/2020-traffic-crash-data-fatalities>)
 
-Megan McArdle, a columnist the Washington Post, indicated that this may be due to an
-increase in young and risky male drivers taking advantage of empty COVID-era roads.
-A study done by the AAA Foundation for Traffic Safety indicated that young males were
-the only people who indicated that they were driving more during the COVID pandemic -
-taking their risky driving with them.
-(https://www.washingtonpost.com/opinions/2022/03/10/pandemic-risky-driving-maybe-here-to-stay/).
+Megan McArdle, a columnist the Washington Post, indicated that this may
+be due to an increase in young and risky male drivers taking advantage
+of empty COVID-era roads. A study done by the AAA Foundation for Traffic
+Safety indicated that young males were the only people who indicated
+that they were driving more during the COVID pandemic - taking their
+risky driving with them.
+(<https://www.washingtonpost.com/opinions/2022/03/10/pandemic-risky-driving-maybe-here-to-stay/>).
 
-Light Truck fatalities seems to be an exception to these sudden spike of fatal accidents
-during the COVID-19 pandemic, due to young male drivers being less likely to own light trucks.
+Light Truck fatalities seems to be an exception to these sudden spike of
+fatal accidents during the COVID-19 pandemic, due to young male drivers
+being less likely to own light trucks.
 
-In addition, according to Michael Wilbur, a PHD Student in Vanderbilt University, in a paper 
-published in the Transportation Research Record: Journal of the Transportation Research Board,
-bus fatalities is also an exception to the sudden spike of fatal accidents
-due to a decrease in operation hours for buses during the COVID-19 pandemic, as well as
-social distancing measures and precautions advised and enforced by state legislature.
-(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10107069/)
+In addition, according to Michael Wilbur, a PHD Student in Vanderbilt
+University, in a paper published in the Transportation Research Record:
+Journal of the Transportation Research Board, bus fatalities is also an
+exception to the sudden spike of fatal accidents due to a decrease in
+operation hours for buses during the COVID-19 pandemic, as well as
+social distancing measures and precautions advised and enforced by state
+legislature. (<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10107069/>)
 
-Christy Bieber, J.D., indicated that the top 5 most deadliest states to drive in are
-Montana, South Carolina, New Mexico, Wyoming, and Texas based on data from the
-National Highway Traffic Safety Administration (NHTSA). This seems to align with
-our data for Pedestrian  Fatalities by State Population Density.
-(https://www.forbes.com/advisor/legal/most-dangerous-states-for-drivers/) 
+Christy Bieber, J.D., indicated that the top 5 most deadliest states to
+drive in are Montana, South Carolina, New Mexico, Wyoming, and Texas
+based on data from the National Highway Traffic Safety Administration
+(NHTSA). This seems to align with our data for Pedestrian Fatalities by
+State Population Density.
+(<https://www.forbes.com/advisor/legal/most-dangerous-states-for-drivers/>)
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -647,13 +818,9 @@ our data for Pedestrian  Fatalities by State Population Density.
 
 ```
 
-According to Alina Comoreanu, a Senior researcher at WalletHub, the top 5 states that 
-had the most strictest enforcement on speeding and reckless driving are (in order) 
-Delaware, Colorado, Arizona, New Mexico, and California. This seems to correlate
-with our data for Pedestrian Fatalities by State Population Density.
-(https://wallethub.com/edu/strictest-and-most-lenient-states-on-speeding/14211)
-
-
-
-
-
+According to Alina Comoreanu, a Senior researcher at WalletHub, the top
+5 states that had the most strictest enforcement on speeding and
+reckless driving are (in order) Delaware, Colorado, Arizona, New Mexico,
+and California. This seems to correlate with our data for Pedestrian
+Fatalities by State Population Density.
+(<https://wallethub.com/edu/strictest-and-most-lenient-states-on-speeding/14211>)
