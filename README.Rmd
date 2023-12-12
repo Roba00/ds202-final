@@ -35,7 +35,7 @@ The variables included in this dataset are as follows:
 -   Fatality Type: A factor of 14 different types of fatalities (such as
     highway fatalities, SUV fatalities, etc.)
 
-    -    Highway Fatalities
+    -   Highway Fatalities
 
     -   Passenger Car Fatalities
 
@@ -47,7 +47,7 @@ The variables included in this dataset are as follows:
 
     -   Other Light Truck Fatalities
 
-    -    Motorcycle Fatalities
+    -   Motorcycle Fatalities
 
     -   Bus Fatalities - Large Truck Fatalities
 
@@ -191,7 +191,7 @@ head(hw_travel)
 summary(hw_travel)
 ```
 
-### Cleaning up data
+### Data Cleanup:
 
 ```{r, echo=FALSE, warning=FALSE}
 # Cleaning data
@@ -235,12 +235,14 @@ states <- states %>%
 summary(states)
 ```
 
+### Data Exploration
+
 #### Plan of Data Exploration
 
 Break down each fatality type and plot the data by state, observe
 similarities and differences between the states for each fatality type.
 
-### Data Exploration
+#### Construct dataframe of fatality by year
 
 ```{r, echo=FALSE, warning=FALSE}
 # Aadhi
@@ -279,7 +281,7 @@ state_map_year <- states %>%
 
 ```
 
-#### Construct map of fatalality by state
+#### Construct dataframe of fatality by state
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -291,7 +293,7 @@ state_map2 <- states %>% left_join(state_map2, by="region")
 head(state_map2)
 ```
 
-#### Highway Fatalities by Year for each State
+#### Construct dataframe of Highway Fatalities by Year and State
 
 ```{r, echo=FALSE, warning=FALSE}
 # Overall highway fatalities by year and state
@@ -615,6 +617,7 @@ temp_states %>%
 ```{r, echo=FALSE, warning=FALSE}
 # Roba
   
+# Passenger Car Fatalities by State per Capita
 temp_states %>%
   filter(FatalityType == "Passenger Car Fatalities") %>% 
   mutate(total_pop = sum(population), .by = State) %>%
@@ -623,6 +626,7 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Passenger Car Fatalities by State per Capita")
 
+Passenger Car Fatalities by State
 state_map2 %>% filter(FatalityType == "Passenger Car Fatalities") %>%
     mutate(total_fatalities = TotalFatalities, .by = State) %>%    
     ggplot(aes(x = long, y = lat)) + 
@@ -630,6 +634,7 @@ state_map2 %>% filter(FatalityType == "Passenger Car Fatalities") %>%
     scale_fill_continuous(name = "Death Count (2010 - 2021)") +
     ggtitle("Passenger Car Fatalities by State")
 
+# SUV Fatalities by State per Capita
 temp_states %>%
   filter(FatalityType == "SUV Fatalities") %>% 
   mutate(total_pop = sum(population), .by = State) %>%
@@ -638,6 +643,7 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("SUV Fatalities by State per Capita")
 
+# SUV Fatalities by State
 state_map2 %>% filter(FatalityType == "SUV Fatalities") %>% 
     mutate(total_fatalities = TotalFatalities, .by = State) %>%    
     ggplot(aes(x = long, y = lat)) + 
@@ -645,18 +651,21 @@ state_map2 %>% filter(FatalityType == "SUV Fatalities") %>%
     scale_fill_continuous(name = "Death Count (2010 - 2021)") +
     ggtitle("SUV Fatalities by State")
 
+# Passenger Car Fatalities by Year
 state_map_year %>% 
   filter(FatalityType == "Passenger Car Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
   ggtitle("Passenger Car Fatalities by Year")
 
+# SUV Fatalities by Year
 state_map_year %>% 
   filter(FatalityType == "SUV Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
   ggtitle("SUV Fatalities by Year")
 
+# Other Nonoccupant Fatalities by State
 state_map2 %>% filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
     mutate(total_fatalities = TotalFatalities, .by = State) %>%    
     ggplot(aes(x = long, y = lat)) + 
@@ -774,6 +783,8 @@ highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/popula
 
 ### Results:
 
+#### Analysis of COVID and Fatality Impact 2020-2021
+
 The first cases of COVID-19 reached the US in January 2020, and the
 Trump Administration declared a nationwide emergency on the COVID-19
 pandemic in March 2021.
@@ -793,10 +804,6 @@ that they were driving more during the COVID pandemic - taking their
 risky driving with them.
 (<https://www.washingtonpost.com/opinions/2022/03/10/pandemic-risky-driving-maybe-here-to-stay/>).
 
-Light Truck fatalities seems to be an exception to these sudden spike of
-fatal accidents during the COVID-19 pandemic, due to young male drivers
-being less likely to own light trucks.
-
 In addition, according to Michael Wilbur, a PHD Student in Vanderbilt
 University, in a paper published in the Transportation Research Record:
 Journal of the Transportation Research Board, bus fatalities is also an
@@ -805,6 +812,8 @@ operation hours for buses during the COVID-19 pandemic, as well as
 social distancing measures and precautions advised and enforced by state
 legislature. (<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10107069/>)
 
+#### Deadliest States to Live In's Correlation with Traffic Fatalities Per Capita
+
 Christy Bieber, J.D., indicated that the top 5 most deadliest states to
 drive in are Montana, South Carolina, New Mexico, Wyoming, and Texas
 based on data from the National Highway Traffic Safety Administration
@@ -812,11 +821,7 @@ based on data from the National Highway Traffic Safety Administration
 State Population Density.
 (<https://www.forbes.com/advisor/legal/most-dangerous-states-for-drivers/>)
 
-```{r, echo=FALSE, warning=FALSE}
-
-
-
-```
+#### State Law Enforcement's Impact on Traffic Fatalities
 
 According to Alina Comoreanu, a Senior researcher at WalletHub, the top
 5 states that had the most strictest enforcement on speeding and
@@ -824,3 +829,20 @@ reckless driving are (in order) Delaware, Colorado, Arizona, New Mexico,
 and California. This seems to correlate with our data for Pedestrian
 Fatalities by State Population Density.
 (<https://wallethub.com/edu/strictest-and-most-lenient-states-on-speeding/14211>)
+
+### Conclusions:
+
+-   We found that an increase in traffic fatalities at the end of the
+    reported data (late 2020 and late 2021) during COVID-19 due to
+    different factors​
+
+-   Light Trucks and Public Transport were exceptions to this.​
+
+-   We found that the most deadliest states to drive had a correlation
+    to high pedestrian fatalities.​
+
+-   We found an inverse correlation between enforcement of speed laws
+    and reckless driving and traffic fatalities.​
+
+-   We found Iowa's leading cause of traffic fatalities was highway
+    fatalities.​
