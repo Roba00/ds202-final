@@ -440,7 +440,12 @@ states_year %>%
   geom_col() + 
   ggtitle("Pickup Truck Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
- 
+```
+
+As is seen in this graph, there isn't any distinct pattern, but there is a spike in 2021.
+
+```{r, echo=FALSE, warning=FALSE}
+
 # Pickup Truck Fatalities by State (Conor)
 
 temp_states %>% 
@@ -458,6 +463,12 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Pickup Truck Fatalities by State")
 
+```
+
+In these graphs, Wyoming clearly leads Pickup truck fatalities per capita, while Texas leads overall.
+
+```{r, echo=FALSE, warning=FALSE}
+
 # Van Fatalities by Year (Conor)
 
 states_year %>% 
@@ -466,6 +477,13 @@ states_year %>%
   geom_col() + 
   ggtitle("Van Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
+
+There was a pattern of decline in van fatalities until 2021 at the end.
+
+```{r, echo=FALSE, warning=FALSE}
 
 # Van Fatalities by State (Conor)
 
@@ -484,6 +502,13 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Van Fatalities by State")
 
+
+```
+
+Once again, Wyoming leads in per capita fatalities, Texas, California, and Florida are all high totals. These states all make sense, given that Wyoming has the lowest population and the other 3 have the highest.
+
+```{r, echo=FALSE, warning=FALSE}
+
 # Other Light Truck Fatalities by Year (Conor)
 
 states_year %>% 
@@ -492,6 +517,13 @@ states_year %>%
   geom_col() + 
   ggtitle("Other Light Truck Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
+
+The data for 2020 and 2021 was not included in the dataset here, and there isn't really a pattern, just a large spike in 2016.
+
+```{r, echo=FALSE, warning=FALSE}
 
 # Other Light Truck Fatalities by State (Conor)
 
@@ -510,6 +542,12 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Other Light Truck Fatalities by State")
 
+```
+
+This time we can see New Mexico leads per capita fatalities, and California leads total.
+
+```{r, echo=FALSE, warning=FALSE}
+
 # Motorcycle Fatalities by Year (Conor)
 
 states_year %>% 
@@ -518,6 +556,13 @@ states_year %>%
   geom_col() + 
   ggtitle("Motorcycle Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
+
+Motorcycle fatalities see a steady increase over time, with the highest being 2020 and 2021.
+
+```{r, echo=FALSE, warning=FALSE}
 
 # Motorcycle Fatalities by State (Conor)
 
@@ -536,8 +581,9 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Motorcycle Fatalities by State")
 
-
 ```
+
+Then again we see Wyoming lead per capita fatalities, with Texas, California, and Florida leading the totals.
 
 ```{r, echo=FALSE, warning=FALSE}
 # Daniel
@@ -626,7 +672,7 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Passenger Car Fatalities by State per Capita")
 
-Passenger Car Fatalities by State
+# Passenger Car Fatalities by State
 state_map2 %>% filter(FatalityType == "Passenger Car Fatalities") %>%
     mutate(total_fatalities = TotalFatalities, .by = State) %>%    
     ggplot(aes(x = long, y = lat)) + 
