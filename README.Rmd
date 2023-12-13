@@ -357,26 +357,29 @@ states_year %>%
   filter(FatalityType == "Pedestrian Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  ggtitle("Pedestrian Fatalities by Year") +
+  labs(title = "Pedestrian Fatalities by Year",
+       caption = "This bar graph shows the amount of pedestrian fatalities in each year, colored by state.") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-# Pedestrian Fatalities by State
+# Pedestrian Fatalities by State per Capita
 temp_states %>% 
   filter(FatalityType == "Pedestrian Fatalities") %>% 
    mutate(total_pop = sum(population), .by = State) %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  ggtitle("Pedestrian Fatalities by State")
+  labs(title = "Pedestrian Fatalities by State PerCapita",
+       caption = "This graph shows the relative amount of pedestrian fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.")
 
-# Pedestrian Fatalities by State per capita
+
+# Pedestrian Fatalities by State
 temp_states %>% 
   filter(FatalityType == "Pedestrian Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
-  ggtitle("Pedestrian Fatalities by State")
-
+  labs(title = "Pedestrian Fatalities by State",
+       caption = "This graph shows the relative number of pedestrian fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.")
 
 
 # Other Nonoccupant Fatalities by Year
@@ -384,10 +387,13 @@ states_year %>%
   filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  ggtitle("Other Nonoccupant Fatalities by Year") +
+  labs(title = "Other Nonoccupant Fatalities by Year",
+       caption = "This bar graph shows the amount of other non-occupant fatalities in each year, colored by state.") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-# Other Nonoccupant Fatalities by State
+
+
+# Other Nonoccupant Fatalities by State perCapita
 
 temp_states %>% 
   filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
@@ -395,38 +401,48 @@ temp_states %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  ggtitle("Other Nonoccupant Fatalities by State")
+  labs(title = "Other Nonoccupant Fatalities by State PerCapita",
+       caption = "This graph shows the relative amount of other non-occupant fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.")
+
+# Other Nonoccupant Fatalities by State
 
 temp_states %>% 
   filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
-  ggtitle("Other Nonoccupant Fatalities by State")
+  labs(title = "Other Nonoccupant Fatalities by State",
+       caption = "This graph shows the relative number of other non-occupant fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.")
+
 
 # Other Vehicle Fatalities by Year
 states_year %>% 
   filter(FatalityType == "Other Vehicle Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  ggtitle("Other Vehicle Fatalities by Year") +
+  labs(title = "Other Vehicle Fatalities by Year",
+       caption = "This bar graph shows the amount of other vehicle fatalities in each year, colored by state.") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-# Other Vehicle Fatalities by State
+
+# Other Vehicle Fatalities by State perCapita
 temp_states %>% 
   filter(FatalityType == "Other Vehicle Fatalities") %>% 
   mutate(total_pop = sum(population), .by = State) %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  ggtitle("Other Vehicle Fatalities by State")
+  labs(title = "Other Vehicle Fatalities by State PerCapita",
+       caption = "This graph shows the relative amount of other vehicle fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.")
 
+# Other Vehicle Fatalities by State
 temp_states %>% 
   filter(FatalityType == "Other Vehicle Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
-  ggtitle("Other Vehicle Fatalities by State")
+  labs(title = "Other Vehicle Fatalities by State",
+       caption = "This graph shows the relative amount of other vehicle fatalities in each state over the entire 2010-2021 period, with the map of the United                        States colored accordingly.")
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
