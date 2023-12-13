@@ -21,11 +21,11 @@
 
 #### Amendments to TODO Tasks:
 
-- Highlight certain information given by plots (ie. what states have the highest stats, etc)
-- Connect plots and data gained to initial questions.
-- Organize README.rmd final report file to be in the layout displayed by the rubric
-- Add relevant data and plots to presentation slides
-- Make conclusions on data
+- ~~Highlight certain information given by plots (ie. what states have the highest stats, etc)~~
+- ~~Connect plots and data gained to initial questions.~~
+- ~~Organize README.rmd final report file to be in the layout displayed by the rubric~~
+- ~~Add relevant data and plots to presentation slides~~
+- ~~Make conclusions on data~~
 
 ####
 
