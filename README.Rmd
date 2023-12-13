@@ -125,13 +125,16 @@ pivot_longer) are as follows:
 
 #### Investigations:
 
--   What is the leading cause of highway fatalities overall/by state?
--   What states, if any, have stark contrasts in vehicular fatalities?
--   Do these states have any laws or regulations that would cause this?
--   Do any types of vehicular fatalities correlate with another?
--   Have counts of certain types of vehicular fatalities increased or
-    decreased over time?
--   How did the COVID-19 pandemic during 2021 affect traffic fatalities?
+Here, we came up with a couple of key questions to use when exploring our data, looking to specifically answer these questions and explore more.
+
+- What is the leading cause of highway fatalities overall/by state?
+- What states, if any, have stark contrasts in vehicular fatalities?
+- Do these states have any laws or regulations that would cause this?
+- Do any types of vehicular fatalities correlate with another?
+- Have counts of certain types of vehicular fatalities increased or decreased over time?
+- How did the COVID-19 pandemic during 2021 affect traffic fatalities?
+- Is there a correlation between state revenue/spending and traffic fatalities?
+
 
 #### Main:
 
@@ -193,6 +196,9 @@ summary(hw_travel)
 
 ### Data Cleanup:
 
+##### We started with basic things like fixing empty column names and filtering the dataset to only include states. We also used the R state map dataset in order to create plots. Finally, we realized that population density was not accounted for in the initial data we found, then pulled the population data from the U.S. Census Bureau for the years and joined it with our dataset.
+
+
 ```{r, echo=FALSE, warning=FALSE}
 # Cleaning data
 
@@ -239,10 +245,7 @@ summary(states)
 
 #### Plan of Data Exploration
 
-Break down each fatality type and plot the data by state, observe
-similarities and differences between the states for each fatality type.
-
-#### Construct dataframe of fatality by year
+##### Break down each fatality type and plot the data by state, observe similarities and differences between the states for each fatality type. First, we constructed the dataframe of fatality by year, and then we constructed dataframe of fatality by state.
 
 ```{r, echo=FALSE, warning=FALSE}
 # Aadhi
@@ -281,7 +284,7 @@ state_map_year <- states %>%
 
 ```
 
-#### Construct dataframe of fatality by state
+##### This data shows the states used to construct our plots and to seperate the data by state.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -292,6 +295,10 @@ state_map2 <- map_data("state")
 state_map2 <- states %>% left_join(state_map2, by="region")
 head(state_map2)
 ```
+
+### Displaying the Data
+
+##### (note that for some of the plots displaying data by state, the lighter the state color is, the higher their value is in that plot.)
 
 #### Construct dataframe of Highway Fatalities by Year and State
 
@@ -304,21 +311,37 @@ temp_states %>%
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Highway Fatalities by State per Capita")
+```
 
+##### The above plot shows the rate of overall highway fatalities by state per capita, with Wyoming being notable for having the highest rate per capita, which makes sense due to the state having the smallest population against all the other states in the US. 
+
+##### Some reasons for this may be:
+#####  - Lowest state population, lots of mountains and dangerous road conditions
+#####  - Travelers who are unversed with these roads may lead to a disproportionate number of vehicular fatalities
+
+``` {r, echo=FALSE, warning=FALSE}
 state_map2 %>% filter(FatalityType == "Highway Fatalities") %>% 
     mutate(total_fatalities = TotalFatalities, .by = State) %>%   
     ggplot(aes(x = long, y = lat)) + 
     geom_polygon(aes(group=group, fill = total_fatalities)) +
     scale_fill_continuous(name = "Death Count (2010 - 2021)") +
     ggtitle("Highway Fatalities by State (2010-2021)")
+```
 
+##### The above plot shows the total number of highway fatalities by state over the years that the data was collected (2010-2021). The three states with the highest highway fatalites are: Texas, California, and Flordia. With these states having some of the highest state populations compared to other states in the country, it would be common for these states to have the highest numbers. This also makes sense since during this time, more people were moving to Texas and Flordia during this time, increasing their populations. This could correspond to a rise in the total number of highway fatalites.
+
+``` {r, echo=FALSE, warning=FALSE}
 states_year %>% 
   filter(FatalityType == "Highway Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col(space=1) + 
   ggtitle("Highway Fatalities by Year by State") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
 
+##### The above chart displays the total number of highway fatalites by year by each state. It's interesting to see a spike in 2020-2021 during the Covid-19 lockdown years, since you would think less people would be out traveling, so you'd expect the totals to be lower, but they're not.
+
+``` {r, echo=FALSE, warning=FALSE}
 state_map_year %>% 
   filter(FatalityType == "Highway Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
@@ -327,7 +350,9 @@ state_map_year %>%
 
 ```
 
-#### Comparing highway fatalities to miles traveled in each state/overall from 2010-2021
+##### The chart above displays the Highway Fatality Totals by year from 2010-2021, where there is a noticable rise from the start, with a spike in the data in 2015-2016 and then again during 2020-2021.
+
+#### Comparing highway fatalities to miles traveled in each state/overall from 2010-2021, sudden decrease in 2020 due to intial Covid-19 lockdown, with the total rising again in 2021 as more people started to travel again.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -338,7 +363,11 @@ hw_travel %>%
   geom_col() + 
   ggtitle("Highway vehicle-miles traveled (millions) by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+```
 
+#### Comparing highway fatalities to licensed drivers in each state/overall from 2010-2021. Steady increase in new drivers as the population continues to grow over the years.
+
+``` {r, echo=FALSE, warning=FALSE}
 # Show the number of total licensed drivers in the US by year
 hw_travel %>% 
   filter(Type == "Licensed drivers") %>% 
@@ -349,6 +378,8 @@ hw_travel %>%
 
 ```
 
+#### This bar graph shows the amount of pedestrian fatalities in each year, colored by state.
+
 ```{r, echo=FALSE, warning=FALSE}
 # Aadhi
 
@@ -357,10 +388,13 @@ states_year %>%
   filter(FatalityType == "Pedestrian Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  labs(title = "Pedestrian Fatalities by Year",
-       caption = "This bar graph shows the amount of pedestrian fatalities in each year, colored by state.") +
+  labs(title = "Pedestrian Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
 
+#### This graph shows the relative amount of pedestrian fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.
+
+``` {r, echo=FALSE, warning=FALSE}
 # Pedestrian Fatalities by State per Capita
 temp_states %>% 
   filter(FatalityType == "Pedestrian Fatalities") %>% 
@@ -368,30 +402,37 @@ temp_states %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  labs(title = "Pedestrian Fatalities by State PerCapita",
-       caption = "This graph shows the relative amount of pedestrian fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.")
+  labs(title = "Pedestrian Fatalities by State PerCapita")
+```
 
+#### This graph shows the relative number of pedestrian fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.
 
+``` {r, echo=FALSE, warning=FALSE}
 # Pedestrian Fatalities by State
 temp_states %>% 
   filter(FatalityType == "Pedestrian Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
-  labs(title = "Pedestrian Fatalities by State",
-       caption = "This graph shows the relative number of pedestrian fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.")
+  labs(title = "Pedestrian Fatalities by State")
+```
 
+#### This bar graph shows the amount of other non-occupant fatalities in each year, colored by state.
 
+``` {r, echo=FALSE, warning=FALSE}
 # Other Nonoccupant Fatalities by Year
 states_year %>% 
   filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  labs(title = "Other Nonoccupant Fatalities by Year",
-       caption = "This bar graph shows the amount of other non-occupant fatalities in each year, colored by state.") + 
+  labs(title = "Other Nonoccupant Fatalities by Year") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+```
 
+#### This graph shows the relative amount of other non-occupant fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # Other Nonoccupant Fatalities by State perCapita
 
@@ -401,8 +442,13 @@ temp_states %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  labs(title = "Other Nonoccupant Fatalities by State PerCapita",
-       caption = "This graph shows the relative amount of other non-occupant fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.")
+  labs(title = "Other Nonoccupant Fatalities by State PerCapita")
+
+```
+
+#### This graph shows the relative number of other non-occupant fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # Other Nonoccupant Fatalities by State
 
@@ -411,19 +457,27 @@ temp_states %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
-  labs(title = "Other Nonoccupant Fatalities by State",
-       caption = "This graph shows the relative number of other non-occupant fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.")
+  labs(title = "Other Nonoccupant Fatalities by State")
 
+```
+
+#### This bar graph shows the amount of other vehicle fatalities in each year, colored by state.
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # Other Vehicle Fatalities by Year
 states_year %>% 
   filter(FatalityType == "Other Vehicle Fatalities") %>% 
   ggplot(aes(x = year, y = count, fill = State)) + 
   geom_col() + 
-  labs(title = "Other Vehicle Fatalities by Year",
-       caption = "This bar graph shows the amount of other vehicle fatalities in each year, colored by state.") +
+  labs(title = "Other Vehicle Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+```
+
+#### This graph shows the relative amount of other vehicle fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # Other Vehicle Fatalities by State perCapita
 temp_states %>% 
@@ -432,8 +486,13 @@ temp_states %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
-  labs(title = "Other Vehicle Fatalities by State PerCapita",
-       caption = "This graph shows the relative amount of other vehicle fatalities in each state over the entire 2010-2021 period, accounting for population density, with the map of the United States colored accordingly.")
+  labs(title = "Other Vehicle Fatalities by State PerCapita")
+
+```
+
+#### This graph shows the relative amount of other vehicle fatalities in each state over the entire 2010-2021 period, with the map of the United States colored accordingly.
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # Other Vehicle Fatalities by State
 temp_states %>% 
@@ -441,8 +500,7 @@ temp_states %>%
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
-  labs(title = "Other Vehicle Fatalities by State",
-       caption = "This graph shows the relative amount of other vehicle fatalities in each state over the entire 2010-2021 period, with the map of the United                        States colored accordingly.")
+  labs(title = "Other Vehicle Fatalities by State")
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
@@ -458,7 +516,7 @@ states_year %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-As is seen in this graph, there isn't any distinct pattern, but there is a spike in 2021.
+#### As is seen in this graph, there isn't any distinct pattern, but there is a spike in 2021.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -481,7 +539,7 @@ temp_states %>%
 
 ```
 
-In these graphs, Wyoming clearly leads Pickup truck fatalities per capita, while Texas leads overall.
+#### In these graphs, Wyoming clearly leads Pickup truck fatalities per capita, while Texas leads overall.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -497,7 +555,7 @@ states_year %>%
 
 ```
 
-There was a pattern of decline in van fatalities until 2021 at the end.
+#### There was a pattern of decline in van fatalities until 2021 at the end.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -521,7 +579,7 @@ temp_states %>%
 
 ```
 
-Once again, Wyoming leads in per capita fatalities, Texas, California, and Florida are all high totals. These states all make sense, given that Wyoming has the lowest population and the other 3 have the highest.
+#### Once again, Wyoming leads in per capita fatalities, Texas, California, and Florida are all high totals. These states all make sense, given that Wyoming has the lowest population and the other 3 have the highest.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -537,7 +595,7 @@ states_year %>%
 
 ```
 
-The data for 2020 and 2021 was not included in the dataset here, and there isn't really a pattern, just a large spike in 2016.
+#### The data for 2020 and 2021 was not included in the dataset here, and there isn't really a pattern, just a large spike in 2016.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -560,7 +618,7 @@ temp_states %>%
 
 ```
 
-This time we can see New Mexico leads per capita fatalities, and California leads total.
+#### This time we can see New Mexico leads per capita fatalities, and California leads total.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -576,7 +634,7 @@ states_year %>%
 
 ```
 
-Motorcycle fatalities see a steady increase over time, with the highest being 2020 and 2021.
+#### Motorcycle fatalities see a steady increase over time, with the highest being 2020 and 2021.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -599,7 +657,9 @@ temp_states %>%
 
 ```
 
-Then again we see Wyoming lead per capita fatalities, with Texas, California, and Florida leading the totals.
+#### Then again we see Wyoming lead per capita fatalities, with Texas, California, and Florida leading the totals.
+
+#### Moving forward to look into public transportation that uses American highways, below we have the total number of bus fatalites on the highway by year and labeled by state. The data fluctuates over the years, with a few spikes in 2011, 2013, and 2017 for not known reasons. But when Covid-19 brings the country into a lockdown, there is a very noticable drop in 2020-2021.
 
 ```{r, echo=FALSE, warning=FALSE}
 # Daniel
@@ -611,7 +671,11 @@ states_year %>%
   geom_col(space=1) + 
   ggtitle("Bus Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
 
+#### Here, the bus fatality totals per capita are labeled by state, with New Mexico interestingly having the highest rate per capita out of any state.
+
+``` {r, echo=FALSE, warning=FALSE}
 temp_states %>%
   filter(FatalityType == "Bus Fatalities") %>% 
   mutate(total_pop = sum(population), .by = State) %>%
@@ -620,6 +684,12 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Bus Fatalities by State")
 
+```
+
+#### Looking into this, we observed the total number of bus fatalites overall by state, with Texas, California, and New York having the highest values. This makes sense due to their large populations, large urban populations, and extensive use of bus systems in their urban areas.
+
+``` {r, echo=FALSE, warning=FALSE}
+
 temp_states %>%
   filter(FatalityType == "Bus Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
@@ -627,6 +697,11 @@ temp_states %>%
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Bus Fatalities by State")
 
+```
+
+#### Observing large truck fatalities across the country, which mainly involves semi-trucks and the movement of goods, there is an increase of fatalites occuring as the years go on. This could be due to a rise in consumer product shipping, the internet and online shopping becoming a bigger part in American commerce, leading to more large trucks on the road, causing more accidents. This could also be due to a rush for a need for more truckers, causing there to be more inexperienced truckers on the road.
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # Large Truck Fatalities by year per state
 states_year %>% 
@@ -635,7 +710,11 @@ states_year %>%
   geom_col(space=1) + 
   ggtitle("Large Truck Fatalities by Year") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
 
+#### Wyoming noticably has the largest per capita accidents in this category, mainly due to their small population and the risks that are posed on these trucking services due to wide open highways and unexpected and severe weather than can occur, such as in the winter season.
+
+``` {r, echo=FALSE, warning=FALSE}
 temp_states %>%
   filter(FatalityType == "Large Truck Fatalities") %>% 
   mutate(total_pop = sum(population), .by = State) %>%
@@ -643,14 +722,22 @@ temp_states %>%
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Large Truck Fatalities by State")
+```
 
+#### Texas has the largest number of fatalites for large trucks, due to their large population, and for how massive the state is.
+
+``` {r, echo=FALSE, warning=FALSE}
 temp_states %>%
   filter(FatalityType == "Large Truck Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities)) + 
   ggtitle("Large Truck Fatalities by State")
+```
 
+#### Looking at pedalcyclist, there is a constant rise in fatal accidents, this could be due to more cyclists being on the roads as time went on.
+
+``` {r, echo=FALSE, warning=FALSE}
 # Pedalcyclist Fatalities by year per state
 states_year %>% 
   filter(FatalityType == "Pedalcyclist Fatalities") %>% 
@@ -666,7 +753,11 @@ temp_states %>%
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Pedalcyclist Fatalities by State per Capita")
+```
 
+#### It's interesting to see that the highest number of pedacyclist accidents occur in California and Flordia, this could be due to their nicer climates, where there are more days were cyclists are on the road.
+
+``` {r, echo=FALSE, warning=FALSE}
 temp_states %>%
   filter(FatalityType == "Pedalcyclist Fatalities") %>% 
   mutate(total_fatalities = TotalFatalities, .by = State) %>% 
@@ -675,6 +766,8 @@ temp_states %>%
   ggtitle("Pedalcyclist Fatalities by State")
 
 ```
+
+#### With passenger vehicles and SUV's being some of the most common type of vehicles on the road, it's not unexpected that their fatality numbers are higher than any other categories in this data. Some of the highest passenger car fatal accidents seem to occur in the Great Plains and Rocky Mountain regions of the United States. This is most likely due to the terrain being more difficult and dangerous to drive on, especially in the winter season. These rates could further be caused by inexperienced drivers and tourists in these areas.
 
 ```{r, echo=FALSE, warning=FALSE}
 # Roba
@@ -687,7 +780,11 @@ temp_states %>%
   ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group, fill = total_fatalities / total_pop)) + 
   ggtitle("Passenger Car Fatalities by State per Capita")
+```
 
+#### Overall, California, Texas, and Flordia have the highest total number of passenger vehicle fatal accidents. There is also a noticable difference between the eastern and western United States, with the eastern states having an average of more passenger car fatalities.
+
+``` {r, echo=FALSE, warning=FALSE}
 # Passenger Car Fatalities by State
 state_map2 %>% filter(FatalityType == "Passenger Car Fatalities") %>%
     mutate(total_fatalities = TotalFatalities, .by = State) %>%    
@@ -695,6 +792,12 @@ state_map2 %>% filter(FatalityType == "Passenger Car Fatalities") %>%
     geom_polygon(aes(group=group, fill = total_fatalities)) +
     scale_fill_continuous(name = "Death Count (2010 - 2021)") +
     ggtitle("Passenger Car Fatalities by State")
+
+```
+
+#### This data also appears to be similar to SUV highway fatalites, both per capita and overall. 
+
+``` {r, echo=FALSE, warning=FALSE}
 
 # SUV Fatalities by State per Capita
 temp_states %>%
@@ -712,21 +815,33 @@ state_map2 %>% filter(FatalityType == "SUV Fatalities") %>%
     geom_polygon(aes(group=group, fill = total_fatalities)) +
     scale_fill_continuous(name = "Death Count (2010 - 2021)") +
     ggtitle("SUV Fatalities by State")
+```
 
+#### Doesn't seem to be any decrease or increase in passenger car fatalites over the years.
+
+``` {r, echo=FALSE, warning=FALSE}
 # Passenger Car Fatalities by Year
 state_map_year %>% 
   filter(FatalityType == "Passenger Car Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
   ggtitle("Passenger Car Fatalities by Year")
+```
 
+#### However, there is a sharp increase of SUV fatalites in the later years. This could be caused by more people buying and driving SUVs in the United States, as some of the most popular vehicles on the road these days seems to be these larger vehicles.
+
+``` {r, echo=FALSE, warning=FALSE}
 # SUV Fatalities by Year
 state_map_year %>% 
   filter(FatalityType == "SUV Fatalities") %>% 
   ggplot(aes(x = year, y = count)) + 
   geom_col() + 
   ggtitle("SUV Fatalities by Year")
+```
 
+#### Here, this plot shows the total number of nonoccupant fatalites by state, this being non-traffic fatalites that occured on American highways. This data spikes in states such as California, Arizona, Texas, and Flordia.
+
+``` {r, echo=FALSE, warning=FALSE}
 # Other Nonoccupant Fatalities by State
 state_map2 %>% filter(FatalityType == "Other Nonoccupant Fatalities") %>% 
     mutate(total_fatalities = TotalFatalities, .by = State) %>%    
@@ -740,7 +855,7 @@ state_map2 %>% filter(FatalityType == "Other Nonoccupant Fatalities") %>%
 
 #### Reading and Formatting the Financial Data
 
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 financials2019_old1 <- read.csv("ASFIN_FY2019.csv")
 head(financials2019_old1)
 
@@ -757,7 +872,7 @@ head(financials2019)
 
 #### Joining Financial Data with Traffic Fatality Data
 
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 fat_states_pops_2019 <- temp_states %>% filter(year == "Y2019")
 head(fat_states_pops_2019)
 
@@ -767,7 +882,10 @@ head(fat_states_pops_fin_2019)
 
 #### Investigating Correlations of Traffic Fatalities with Total State Revenue
 
-```{r}
+##### Here, we investigate would state revenue and expenditure have a correlationwith traffic fatalities? For this, we observed that there is a correlation between revenue and expenditure in most states.
+
+
+```{r, echo=FALSE, warning=FALSE}
 highwayFats_states_pops_revenue_2019 <-
     fat_states_pops_fin_2019 %>% 
     filter(RevenueType == "Total revenue", FatalityType == "Highway Fatalities") %>% 
@@ -790,7 +908,7 @@ highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/popula
 
 #### Investigating Correlations of Traffic Fatalities with Police Expenditure
 
-```{r}
+```{r, echo=FALSE, warning=FALSE}
 highwayFats_states_pops_revenue_2019 <-
     fat_states_pops_fin_2019 %>% 
     filter(RevenueType == "Police protection", FatalityType == "Highway Fatalities") %>% 
@@ -806,7 +924,9 @@ highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/popula
 
 #### Investigating Correlations of Traffic Fatalities with Total State Expenditure
 
-```{r}
+##### Here, we investigated if state revenue and expenditure have a correlation with traffic fatalities? What we found is that we observed a negative correlation between revenue and expenditure and traffic fatalities.
+
+```{r, echo=FALSE, warning=FALSE}
 highwayFats_states_pops_revenue_2019 <-
     fat_states_pops_fin_2019 %>% 
     filter(RevenueType == "Total expenditure", FatalityType == "Highway Fatalities") %>% 
@@ -829,7 +949,10 @@ highwayFats_states_pops_revenue_2019 %>% ggplot(aes(x=`Amount (Per 1000)`/popula
 
 #### Investigating Correlations of Traffic Fatalities with Education Expenditure
 
-```{r}
+##### Here, we looked into what impact would specific types of state funding (expenditure) have on traffic fatalities? From our data, we found that state funding on services like policing and education had a weak negative correlation to traffic fatalities.
+
+
+```{r, echo=FALSE, warning=FALSE}
 highwayFats_states_pops_revenue_2019 <-
     fat_states_pops_fin_2019 %>% 
     filter(RevenueType == "Education", FatalityType == "Highway Fatalities") %>% 
@@ -891,6 +1014,12 @@ reckless driving are (in order) Delaware, Colorado, Arizona, New Mexico,
 and California. This seems to correlate with our data for Pedestrian
 Fatalities by State Population Density.
 (<https://wallethub.com/edu/strictest-and-most-lenient-states-on-speeding/14211>)
+
+This seems to partially align with our data for Total Fatalities by State Per Capita.
+
+#### Reasons for Safety Enforcement:
+
+There is a cluster of states near Wyoming shows that lenient drunk driving laws lead to more fatalities. Wisconsin also has some of the drunkest counties in the United States, but it seems like their total fatalities related to this aren't as severe. Utah and New York have high DUI severity and an extremely low amount of fatalities accordingly.
 
 ### Conclusions:
 
